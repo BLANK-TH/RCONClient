@@ -16,3 +16,6 @@ def assert_data():
     if not isfile("data/config.json"):
         with open("data/config.json", "w") as f:
             dump({}, f, indent=2)
+
+def clean_filename(filename):
+    return "".join([c if (c.isalpha() or c.isdigit() or c == '-') and c != ' ' else '_' for c in filename]).rstrip()

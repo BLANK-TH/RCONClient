@@ -182,6 +182,7 @@
      <string>Instance</string>
     </property>
     <addaction name="action_instance_clear"/>
+    <addaction name="action_instance_save"/>
    </widget>
    <widget class="QMenu" name="menu_tools">
     <property name="title">
@@ -216,6 +217,11 @@
   <action name="action_config_reorder">
    <property name="text">
     <string>Reorder</string>
+   </property>
+  </action>
+  <action name="action_instance_save">
+   <property name="text">
+    <string>Save Console</string>
    </property>
   </action>
  </widget>
