@@ -184,14 +184,14 @@
     <addaction name="action_instance_clear"/>
     <addaction name="action_instance_save"/>
    </widget>
-   <widget class="QMenu" name="menu_tools">
+   <widget class="QMenu" name="menu_plugins">
     <property name="title">
-     <string>Tools</string>
+     <string>Plugins</string>
     </property>
    </widget>
    <addaction name="menu_instance"/>
    <addaction name="menu_configs"/>
-   <addaction name="menu_tools"/>
+   <addaction name="menu_plugins"/>
    <addaction name="menu_preferences"/>
   </widget>
   <action name="action_config_new">
