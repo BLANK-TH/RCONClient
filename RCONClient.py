@@ -249,7 +249,10 @@ class Ui_MainWindow(object):
         if filename == "":
             return
         with open(filename, "w", encoding="utf-8") as f:
-            f.write(self.console.toPlainText())
+            try:
+                f.write(self.console.toPlainText())
+            except UnicodeEncodeError:
+                QtWidgets.QMessageBox.critical(None, "Error", "Could not save console. Invalid characters detected.")
 
     def change_console_config(self):
         self.clear_console()
