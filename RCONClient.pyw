@@ -309,6 +309,7 @@ if __name__ == "__main__":
         menu_action.setText(plugin.name)
         # noinspection PyUnresolvedReferences
         menu_action.triggered.connect(lambda _, p=plugin: p.on_menu())
+        ui.menu_plugins.addAction(menu_action)
         call_if_hooked(plugin, "on_load")
     MainWindow.show()
     sys.exit(app.exec_())
