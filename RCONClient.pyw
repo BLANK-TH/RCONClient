@@ -185,7 +185,7 @@ class Ui_MainWindow(object):
         for plugin in PLUGINS:
             res = call_if_hooked(plugin, hook_name, *args, **kwargs)
             if res is not None:
-                self.console.append("=== [{}] ===\n{}\n===={}====".format(plugin.name, res, "=" * len(plugin.name)))
+                self.console.append("=== [/{0}] ===\n{1}\n=== [{0}/] ===\n".format(plugin.name, res))
 
     # CALLBACKS
     # noinspection PyAttributeOutsideInit
@@ -207,10 +207,11 @@ class Ui_MainWindow(object):
             self.call_hooks("on_command_send", command)
             self.console.verticalScrollBar().setValue(self.console.verticalScrollBar().maximum())
             try:
-                self.console.append(send_rcon_command(command, *CONFIG[self.get_active_config()].values()))
+                response = send_rcon_command(command, *CONFIG[self.get_active_config()].values())
             except Exception as e:
-                self.console.append("Error: {}".format(e))
-            self.call_hooks("on_response_received", command)
+                response = "Error: {}".format(e)
+            self.console.append(response)
+            self.call_hooks("on_response_received", command, response)
             self.console.verticalScrollBar().setValue(self.console.verticalScrollBar().maximum())
             # Update consoles output cache
             self.consoles[self.get_active_config()] = self.console.toPlainText()
