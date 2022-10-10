@@ -248,7 +248,7 @@ class Ui_MainWindow(object):
                                        datetime.now().strftime("%Y-%H-%M-%S_%f"))), "Text Files (*.txt)")[0]
         if filename == "":
             return
-        with open(filename, "w") as f:
+        with open(filename, "w", encoding="utf-8") as f:
             f.write(self.console.toPlainText())
 
     def change_console_config(self):
