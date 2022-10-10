@@ -215,3 +215,4 @@ cython_debug/
 data/
 plugins/*
 !plugins/__init__.py
+!plugins/base.py
