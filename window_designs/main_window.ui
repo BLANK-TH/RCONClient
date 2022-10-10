@@ -223,6 +223,9 @@
    <property name="text">
     <string>Save Console</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
  </widget>
  <tabstops>

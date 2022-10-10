@@ -163,6 +163,7 @@ class Ui_MainWindow(object):
         self.action_config_delete.setText(_translate("MainWindow", "Delete Current"))
         self.action_instance_clear.setText(_translate("MainWindow", "Clear Console"))
         self.action_instance_save.setText(_translate("MainWindow", "Save Console"))
+        self.action_instance_save.setShortcut(_translate("MainWindow", "Ctrl+S"))
         self.action_config_reorder.setText(_translate("MainWindow", "Reorder"))
 
     # CUSTOM METHODS
