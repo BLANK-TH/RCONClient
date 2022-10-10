@@ -180,6 +180,9 @@ class Ui_MainWindow(object):
 
     def get_active_config(self) -> str:
         return self.config_dropdown.currentText()
+    
+    def scroll_to_bottom(self):
+        self.console.verticalScrollBar().setValue(self.console.verticalScrollBar().maximum())
 
     def call_hooks(self, hook_name, *args, **kwargs):
         for plugin in PLUGINS:
@@ -205,14 +208,14 @@ class Ui_MainWindow(object):
             self.console.append("] {}".format(command))
             self.command_input.clear()
             self.call_hooks("on_command_send", command)
-            self.console.verticalScrollBar().setValue(self.console.verticalScrollBar().maximum())
+            self.scroll_to_bottom()
             try:
                 response = send_rcon_command(command, *CONFIG[self.get_active_config()].values())
             except Exception as e:
                 response = "Error: {}".format(e)
             self.console.append(response)
             self.call_hooks("on_response_received", command, response)
-            self.console.verticalScrollBar().setValue(self.console.verticalScrollBar().maximum())
+            self.scroll_to_bottom()
             # Update consoles output cache
             self.consoles[self.get_active_config()] = self.console.toPlainText()
 
@@ -278,7 +281,7 @@ class Ui_MainWindow(object):
         self.clear_console()
         if self.get_active_config() in self.consoles:
             self.console.append(self.consoles[self.get_active_config()])
-            self.console.verticalScrollBar().setValue(self.console.verticalScrollBar().maximum())
+            self.scroll_to_bottom()
 
     # CUSTOM HOOKS
     def input_handle_keypress(self, e):
