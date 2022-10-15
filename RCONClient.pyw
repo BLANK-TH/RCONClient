@@ -219,9 +219,12 @@ class Ui_MainWindow(object):
             # Update consoles output cache
             self.consoles[self.get_active_config()] = self.console.toPlainText()
 
-    def submit_command_plugin(self, command, plugin:PluginBase) -> str:
+    def submit_command_plugin(self, plugin:PluginBase, command) -> str:
         """Function that allows plugins to submit a command, update the console,
-        return the response, and bypass any hooks, command history, or checks."""
+        return the response, and bypass any hooks, command history, and most checks."""
+        if self.get_active_config() == "":
+            QtWidgets.QMessageBox.critical(None, "Error", "No active configuration selected.")
+            return "No active configuration selected."
         self.console.append("{} ] {}".format(plugin.name, command))
         try:
             response = send_rcon_command(command, *CONFIG[self.get_active_config()].values())
@@ -318,20 +321,20 @@ def call_if_hooked(child_obj, hook_name, *args, **kwargs):
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    main_window = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(main_window)
+    master_window = QtWidgets.QMainWindow()
+    main_window = Ui_MainWindow()
+    main_window.setupUi(master_window)
     for plugin in PLUGINS:
-        menu_action = QtWidgets.QAction(main_window)
+        menu_action = QtWidgets.QAction(master_window)
         menu_action.setObjectName("action_plugin_{}".format(plugin.name))
         menu_action.setText(plugin.name)
         # noinspection PyUnresolvedReferences
         menu_action.triggered.connect(lambda _, p=plugin: p.on_menu())
-        ui.menu_plugins.addAction(menu_action)
+        main_window.menu_plugins.addAction(menu_action)
         if plugin.keybind is not None:
             menu_action.setShortcut(plugin.keybind)
         # noinspection PyProtectedMember
         plugin._set_main_window(main_window)
         call_if_hooked(plugin, "on_load")
-    main_window.show()
+    master_window.show()
     sys.exit(app.exec_())
