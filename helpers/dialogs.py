@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
 # noinspection PyUnresolvedReferences
 class ConfigEditor(QtWidgets.QDialog):
     def __init__(self, callback: callable, old_values=None, old_name=None):
@@ -159,6 +160,7 @@ class ConfigEditor(QtWidgets.QDialog):
         old_name = self.old_name if hasattr(self, "old_name") and self.old_name != self.name_input.text() else None
         self.callback(name, ip, int(port), password, old_name)
         super().accept()
+
 
 # noinspection PyUnresolvedReferences
 class ConfigReorderDialog(QtWidgets.QDialog):

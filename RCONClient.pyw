@@ -219,6 +219,20 @@ class Ui_MainWindow(object):
             # Update consoles output cache
             self.consoles[self.get_active_config()] = self.console.toPlainText()
 
+    def submit_command_plugin(self, command, plugin:PluginBase) -> str:
+        """Function that allows plugins to submit a command, update the console,
+        return the response, and bypass any hooks, command history, or checks."""
+        self.console.append("{} ] {}".format(plugin.name, command))
+        try:
+            response = send_rcon_command(command, *CONFIG[self.get_active_config()].values())
+        except Exception as e:
+            response = "Error: {}".format(e)
+        self.console.append(response)
+        self.scroll_to_bottom()
+        # Update consoles output cache
+        self.consoles[self.get_active_config()] = self.console.toPlainText()
+        return response
+
     def new_config(self):
         dialog = ConfigEditor(self.new_config_dialog_callback)
         dialog.exec()
@@ -314,6 +328,8 @@ if __name__ == "__main__":
         # noinspection PyUnresolvedReferences
         menu_action.triggered.connect(lambda _, p=plugin: p.on_menu())
         ui.menu_plugins.addAction(menu_action)
+        # noinspection PyProtectedMember
+        plugin._set_main_window(main_window)
         call_if_hooked(plugin, "on_load")
     main_window.show()
     sys.exit(app.exec_())
