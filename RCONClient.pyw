@@ -186,6 +186,12 @@ class Ui_MainWindow(object):
     def get_active_config(self) -> str:
         return self.config_dropdown.currentText()
 
+    def append_to_console(self, text: str):
+        self.console.append(text)
+        self.scroll_to_bottom()
+        # Update consoles output cache
+        self.consoles[self.get_active_config()] = self.console.toPlainText()
+
     def scroll_to_bottom(self):
         self.console.verticalScrollBar().setValue(self.console.verticalScrollBar().maximum())
 
