@@ -2,11 +2,20 @@ from PyQt5 import QtWidgets
 
 
 class PluginBase:
-    def __init__(self, name, version, author, description):
+    def __init__(self, name, version, author, description, keybind=None):
+        """Initializes the plugin.
+
+        :param name: The name of the plugin.
+        :param version: The version of the plugin.
+        :param author: The author of the plugin.
+        :param description: A description of the plugin.
+        :param keybind: The keybind for the plugin menu (on_menu). This needs to be recognized by Qt5's keybind system.
+        """
         self.name = name
         self.version = version
         self.author = author
         self.description = description
+        self.keybind = keybind
         self.main_window = None
 
     def on_load(self):

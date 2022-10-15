@@ -328,6 +328,8 @@ if __name__ == "__main__":
         # noinspection PyUnresolvedReferences
         menu_action.triggered.connect(lambda _, p=plugin: p.on_menu())
         ui.menu_plugins.addAction(menu_action)
+        if plugin.keybind is not None:
+            menu_action.setShortcut(plugin.keybind)
         # noinspection PyProtectedMember
         plugin._set_main_window(main_window)
         call_if_hooked(plugin, "on_load")
