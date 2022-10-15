@@ -236,7 +236,7 @@ class Ui_MainWindow(object):
             self.set_dropdown()
 
     def reorder_configs(self):
-        dialog = ConfigReorderDialog(self.reorder_configs_dialog_callback, CONFIG)
+        dialog = ConfigReorderDialog(self.reorder_configs_dialog_callback, list(CONFIG.keys()))
         dialog.exec()
 
     def new_config_dialog_callback(self, config_name, ip, port, password, _):
@@ -293,6 +293,7 @@ class Ui_MainWindow(object):
             return QtWidgets.QLineEdit.keyPressEvent(self.command_input, e)
         self.command_input.setText(self.command_history[self.command_history_index])
 
+
 def call_if_hooked(child_obj, hook_name, *args, **kwargs):
     parent_func = getattr(PluginBase, hook_name)
     child_func = getattr(child_obj, hook_name)
@@ -303,16 +304,16 @@ def call_if_hooked(child_obj, hook_name, *args, **kwargs):
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
+    main_window = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
+    ui.setupUi(main_window)
     for plugin in PLUGINS:
-        menu_action = QtWidgets.QAction(MainWindow)
+        menu_action = QtWidgets.QAction(main_window)
         menu_action.setObjectName("action_plugin_{}".format(plugin.name))
         menu_action.setText(plugin.name)
         # noinspection PyUnresolvedReferences
         menu_action.triggered.connect(lambda _, p=plugin: p.on_menu())
         ui.menu_plugins.addAction(menu_action)
         call_if_hooked(plugin, "on_load")
-    MainWindow.show()
+    main_window.show()
     sys.exit(app.exec_())
