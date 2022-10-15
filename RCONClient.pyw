@@ -145,11 +145,16 @@ class Ui_MainWindow(object):
         self.submit_button.clicked.connect(self.submit_command)  # Bind submit button to submit_command function
         self.action_config_new.triggered.connect(self.new_config)  # Bind new config button to new_config function
         self.action_config_edit.triggered.connect(self.edit_config)  # Bind edit config button to edit_config function
-        self.action_config_delete.triggered.connect(self.delete_config)  # Bind delete config button to delete_config function
-        self.action_config_reorder.triggered.connect(self.reorder_configs)  # Bind reorder config button to reorder_configs function
-        self.action_instance_clear.triggered.connect(self.clear_console)  # Bind clear instance button to clear_console function
-        self.action_instance_save.triggered.connect(self.save_console)  # Bind save instance button to save_console function
-        self.config_dropdown.currentIndexChanged.connect(self.change_console_config)  # Bind dropdown to change_console_config function
+        self.action_config_delete.triggered.connect(
+            self.delete_config)  # Bind delete config button to delete_config function
+        self.action_config_reorder.triggered.connect(
+            self.reorder_configs)  # Bind reorder config button to reorder_configs function
+        self.action_instance_clear.triggered.connect(
+            self.clear_console)  # Bind clear instance button to clear_console function
+        self.action_instance_save.triggered.connect(
+            self.save_console)  # Bind save instance button to save_console function
+        self.config_dropdown.currentIndexChanged.connect(
+            self.change_console_config)  # Bind dropdown to change_console_config function
 
         # Custom event hooks
         self.command_input.keyPressEvent = self.input_handle_keypress
@@ -180,7 +185,7 @@ class Ui_MainWindow(object):
 
     def get_active_config(self) -> str:
         return self.config_dropdown.currentText()
-    
+
     def scroll_to_bottom(self):
         self.console.verticalScrollBar().setValue(self.console.verticalScrollBar().maximum())
 
@@ -219,21 +224,23 @@ class Ui_MainWindow(object):
             # Update consoles output cache
             self.consoles[self.get_active_config()] = self.console.toPlainText()
 
-    def submit_command_plugin(self, plugin:PluginBase, command) -> str:
-        """Function that allows plugins to submit a command, update the console,
+    def submit_command_plugin(self, plugin: PluginBase, command, show: bool = True) -> str:
+        """Function that allows plugins to submit a command, optionally update the console,
         return the response, and bypass any hooks, command history, and most checks."""
         if self.get_active_config() == "":
             QtWidgets.QMessageBox.critical(None, "Error", "No active configuration selected.")
             return "No active configuration selected."
-        self.console.append("{} ] {}".format(plugin.name, command))
+        if show:
+            self.console.append("{} ] {}".format(plugin.name, command))
         try:
             response = send_rcon_command(command, *CONFIG[self.get_active_config()].values())
         except Exception as e:
             response = "Error: {}".format(e)
-        self.console.append(response)
-        self.scroll_to_bottom()
-        # Update consoles output cache
-        self.consoles[self.get_active_config()] = self.console.toPlainText()
+        if show:
+            self.console.append(response)
+            self.scroll_to_bottom()
+            # Update consoles output cache
+            self.consoles[self.get_active_config()] = self.console.toPlainText()
         return response
 
     def new_config(self):
@@ -241,7 +248,8 @@ class Ui_MainWindow(object):
         dialog.exec()
 
     def edit_config(self):
-        dialog = ConfigEditor(self.edit_config_dialog_callback, CONFIG[self.get_active_config()], self.get_active_config())
+        dialog = ConfigEditor(self.edit_config_dialog_callback, CONFIG[self.get_active_config()],
+                              self.get_active_config())
         dialog.exec()
 
     def delete_config(self):
@@ -320,6 +328,7 @@ def call_if_hooked(child_obj, hook_name, *args, **kwargs):
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     master_window = QtWidgets.QMainWindow()
     main_window = Ui_MainWindow()
