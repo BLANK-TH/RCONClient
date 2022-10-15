@@ -224,14 +224,14 @@ class Ui_MainWindow(object):
             # Update consoles output cache
             self.consoles[self.get_active_config()] = self.console.toPlainText()
 
-    def submit_command_plugin(self, plugin: PluginBase, command, show: bool = True) -> str:
+    def submit_command_plugin(self, command, show: bool = True) -> str:
         """Function that allows plugins to submit a command, optionally update the console,
         return the response, and bypass any hooks, command history, and most checks."""
         if self.get_active_config() == "":
             QtWidgets.QMessageBox.critical(None, "Error", "No active configuration selected.")
             return "No active configuration selected."
         if show:
-            self.console.append("{} ] {}".format(plugin.name, command))
+            self.console.append("] {}".format(command))
         try:
             response = send_rcon_command(command, *CONFIG[self.get_active_config()].values())
         except Exception as e:
